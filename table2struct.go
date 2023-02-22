@@ -197,7 +197,7 @@ func (t *Table2Struct) Run() error {
 			// 字符长度大于1时
 			tableName = strings.ToUpper(tableName[0:1]) + tableName[1:]
 		}
-		tableName = fmt.Sprintf("%s%s%s", t.structPre, tableName, t.structSuf)
+		structName = fmt.Sprintf("%s%s%s", t.structPre, structName, t.structSuf)
 		depth := 1
 		structContent += "type " + structName + " struct {\n"
 		for _, v := range item {
