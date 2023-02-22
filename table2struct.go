@@ -8,6 +8,8 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+
+	_ "github.com/go-sql-driver/mysql" // 必须要加载
 )
 
 // map for converting mysql type to golang types
