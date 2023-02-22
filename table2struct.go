@@ -8,8 +8,6 @@ import (
 	"os"
 	"os/exec"
 	"strings"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 // map for converting mysql type to golang types
@@ -65,6 +63,8 @@ type Table2Struct struct {
 	tagKey         string // tag字段的key值,默认是orm
 	dateToTime     bool   // 是否将 date相关字段转换为 time.Time,默认否
 	fieldAsPtr     bool   // 是否将字段设置为指针类型，默认否
+	structPre      string // struct 固定前缀
+	structSuf      string // struct 固定后缀
 }
 
 type T2tConfig struct {
@@ -140,6 +140,16 @@ func (t *Table2Struct) FieldAsPtr(c bool) *Table2Struct {
 	return t
 }
 
+func (t *Table2Struct) StructPre(s string) *Table2Struct {
+	t.structPre = s
+	return t
+}
+
+func (t *Table2Struct) StructSuf(s string) *Table2Struct {
+	t.structSuf = s
+	return t
+}
+
 func (t *Table2Struct) Run() error {
 	if t.config == nil {
 		t.config = new(T2tConfig)
@@ -185,6 +195,7 @@ func (t *Table2Struct) Run() error {
 			// 字符长度大于1时
 			tableName = strings.ToUpper(tableName[0:1]) + tableName[1:]
 		}
+		tableName = fmt.Sprintf("%s%s%s", t.structPre, tableName, t.structSuf)
 		depth := 1
 		structContent += "type " + structName + " struct {\n"
 		for _, v := range item {
